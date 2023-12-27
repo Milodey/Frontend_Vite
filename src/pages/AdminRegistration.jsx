@@ -45,6 +45,7 @@ const Register = () => {
         try {
             const response = await fetch(`${apiUrl}/adminregister`, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },

@@ -14,6 +14,7 @@ const AllUsers = () => {
             try {
                 const response = await fetch(`${apiUrl}/all`, {
                     method: 'GET',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

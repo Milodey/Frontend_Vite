@@ -33,6 +33,7 @@ const Navbar = () => {
 
                 const response = await fetch(`${apiUrl}/user/${userId}`, {
                     method: 'GET',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

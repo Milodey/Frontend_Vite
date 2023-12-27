@@ -61,6 +61,7 @@ const SearchPage = () => {
 
             const response = await fetch(`${apiUrl}/search/all`, {
                 method: 'GET',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,

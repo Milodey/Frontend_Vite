@@ -37,6 +37,7 @@ const Profile = () => {
             try {
                 const response = await fetch(`${apiUrl}/user/${userId}`, {
                     method: 'GET',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
@@ -144,6 +145,7 @@ const Profile = () => {
 
             const response = await fetch(`${apiUrl}/edit/${userId}`, {
                 method: 'PUT',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,

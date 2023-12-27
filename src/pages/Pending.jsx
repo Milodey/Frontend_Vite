@@ -11,6 +11,7 @@ const Pending = () => {
         try {
             const response = await fetch(`${apiUrl}/pendinguser`, {
                 method: 'GET',
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,

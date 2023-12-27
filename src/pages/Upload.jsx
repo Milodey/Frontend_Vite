@@ -78,6 +78,7 @@ const UploadPage = () => {
 
             const response = await fetch(`${apiUrl}/upload`, {
                 method: 'POST',
+                mode: 'no-cors',
                 body: formDataToSend,
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,

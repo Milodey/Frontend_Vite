@@ -15,6 +15,7 @@ const Dashboard = () => {
             try {
                 const response = await fetch(`${apiUrl}/dashboard`, {
                     method: 'GET',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
