@@ -25,6 +25,7 @@ const Dashboard = () => {
                     setTotalUpload(data.totalFiles);
                     setTotalSearch(data.searchCount);
                 } else {
+                    console.log(`${localStorage.getItem('token')}`);
                     console.error('Failed to fetch dashboard data:', response.status, response.statusText);
                 }
             } catch (error) {
