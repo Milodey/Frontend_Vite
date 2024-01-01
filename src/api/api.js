@@ -2,6 +2,6 @@
 // Import any necessary modules or libraries
 
 // Define your API endpoint
-export const apiUrl = '/api';
+export const apiUrl = 'https://backendapi-wtkn.onrender.com/api';
 
 
