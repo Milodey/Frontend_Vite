@@ -20,6 +20,7 @@ const Navbar = () => {
     const [userName, setUserName] = useState('');
     const navigate = useNavigate();
 
+
     useEffect(() => {
         // Fetch user information from the backend after login
         const fetchUserData = async () => {
@@ -31,18 +32,16 @@ const Navbar = () => {
                     return;
                 }
 
-                const response = await fetch(`${apiUrl}/user/${userId}`, {
-                    method: 'GET',
-                    mode: 'no-cors',
+                const response = await axios.get(`${apiUrl}/user/${userId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
-                    credentials: 'include', // Include credentials (cookies) in the request
+                    withCredentials: true, // Include credentials (cookies) in the request
                 });
 
-                if (response.ok) {
-                    const userData = await response.json();
+                if (response.status === 200) {
+                    const userData = response.data;
                     setUserName(userData.name);
                     console.log(userData.name);
                 } else {
@@ -76,15 +75,14 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch(`${apiUrl}/logout`, {
-                method: 'POST',
+            const response = await axios.post(`${apiUrl}/logout`, null, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
                 console.log('Logout successful');
             } else {
                 console.error('Logout failed:', response.status, response.statusText);
