@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import adhar from '../assets/aadhaar-1.svg';
 import { apiUrl } from '../api/api';
+import axios from 'axios';
+
 
 function getGreeting() {
     const hour = new Date().getHours();
