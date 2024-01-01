@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import Menu from '../components/Menu'; // Import Menu component
 import Navbar from '../components/Navbar';
 import { apiUrl } from '../api/api';
+import axios from 'axios'; // Import Axios
+
 
 const Dashboard = () => {
     const [totalUpload, setTotalUpload] = useState(0);
@@ -13,18 +15,16 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${apiUrl}/dashboard`, {
-                    method: 'GET',
-                    mode: 'no-cors',
+                const response = await axios.get(`${apiUrl}/dashboard`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
-                    credentials: 'include', // Include credentials (cookies) in the request
+                    withCredentials: true, // Send cookies along with the request
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
+                if (response.status === 200) {
+                    const data = response.data;
                     setTotalUpload(data.totalFiles);
                     setTotalSearch(data.searchCount);
                 } else {

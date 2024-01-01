@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Menu from '../components/Menu';
 import Navbar from '../components/Navbar';
+import axios from 'axios'; // Import Axios
 import { apiUrl } from '../api/api';
 
 // Constants for dropdown options
@@ -76,17 +77,15 @@ const UploadPage = () => {
             formDataToSend.append('state', formData.state);
             formDataToSend.append('receiveFrom', formData.receiveFrom);
 
-            const response = await fetch(`${apiUrl}/upload`, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: formDataToSend,
+            const response = await axios.post(`${apiUrl}/upload`, formDataToSend, {
                 headers: {
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                credentials: 'include',
+                withCredentials: true,
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
                 // Display success toast notification
                 toast.success('File uploaded successfully!', { position: toast.POSITION.TOP_RIGHT });
             } else {

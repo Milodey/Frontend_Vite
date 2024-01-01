@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Menu from '../components/Menu';
 import Navbar from '../components/Navbar';
 import { apiUrl } from '../api/api';
+import axios from 'axios'; // Import Axios
+
 
 const Pending = () => {
     const [pendingUsers, setPendingUsers] = useState([]);
@@ -9,39 +11,37 @@ const Pending = () => {
 
     const fetchPendingUsers = async () => {
         try {
-            const response = await fetch(`${apiUrl}/pendinguser`, {
-                method: 'GET',
-                mode: 'no-cors',
+            const response = await axios.get(`${apiUrl}/pendinguser`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                credentials: 'include',
+                withCredentials: true,
             });
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
             }
 
-            const data = await response.json();
-            setPendingUsers(data);
+            setPendingUsers(response.data);
+            setIsLoading(false);
         } catch (error) {
             setError(error.message || 'An error occurred while fetching pending users.');
+            setIsLoading(false);
         }
     };
 
     const handleAccept = async (userId) => {
         try {
-            const response = await fetch(`${apiUrl}/accept/${userId}`, {
-                method: 'POST',
+            const response = await axios.post(`${apiUrl}/accept/${userId}`, null, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                credentials: 'include',
+                withCredentials: true,
             });
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
             }
 
@@ -53,16 +53,15 @@ const Pending = () => {
 
     const handleReject = async (userId) => {
         try {
-            const response = await fetch(`${apiUrl}/reject/${userId}`, {
-                method: 'DELETE',
+            const response = await axios.delete(`${apiUrl}/reject/${userId}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                credentials: 'include',
+                withCredentials: true,
             });
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
             }
 
@@ -73,8 +72,14 @@ const Pending = () => {
     };
 
     useEffect(() => {
+        let mounted = true;
         fetchPendingUsers();
+
+        return () => {
+            mounted = false;
+        };
     }, []);
+
 
 
     return (

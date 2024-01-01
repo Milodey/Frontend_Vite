@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Menu from '../components/Menu';
 import Navbar from '../components/Navbar';
 import { apiUrl } from '../api/api';
+import axios from 'axios'; // Import Axios
+
 
 const AllUsers = () => {
     const [allUsers, setAllUsers] = useState([]);
@@ -12,21 +14,15 @@ const AllUsers = () => {
     useEffect(() => {
         const fetchAllUsers = async () => {
             try {
-                const response = await fetch(`${apiUrl}/all`, {
-                    method: 'GET',
-                    mode: 'no-cors',
+                const response = await axios.get(`${apiUrl}/all`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
-                    credentials: 'include',
+                    withCredentials: true, // Send cookies along with the request
                 });
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                }
 
-
-                const usersData = await response.json();
+                const usersData = response.data;
                 console.log('All Users Data:', usersData);
                 setAllUsers(usersData || []); // Ensure usersData is an array or default to an empty array
 

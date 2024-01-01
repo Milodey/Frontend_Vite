@@ -6,6 +6,8 @@ import Navbar from '../components/Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { apiUrl } from '../api/api';
+import axios from 'axios'; // Import Axios
+
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
 
@@ -59,18 +61,16 @@ const SearchPage = () => {
                 return;
             }
 
-            const response = await fetch(`${apiUrl}/search/all`, {
-                method: 'GET',
-                mode: 'no-cors',
+            const response = await axios.get(`${apiUrl}/search/all`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                credentials: 'include',
+                withCredentials: true,
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            if (response.status === 200) {
+                const data = response.data;
                 const resultsArray = Array.isArray(data.searchResults) ? data.searchResults : [];
                 setSearchResults(resultsArray);
                 console.log('Search Results:', resultsArray);
@@ -84,6 +84,7 @@ const SearchPage = () => {
             toast.error('Error searching documents');
         }
     };
+
 
 
 
@@ -127,19 +128,17 @@ const SearchPage = () => {
                 return;
             }
 
-            const response = await fetch(`${apiUrl}/search`, {
-                method: 'POST',
+
+            const response = await axios.post(`${apiUrl}/search`, searchParams, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${getToken()}`,
                 },
-                credentials: 'include',
-                body: JSON.stringify(searchParams),
+                withCredentials: true,
             });
 
-
-            if (response.ok) {
-                const data = await response.json();
+            if (response.status === 200) {
+                const data = response.data;
                 const resultsArray = Array.isArray(data.searchResults) ? data.searchResults : [];
                 setSearchResults(resultsArray);
                 console.log('Search Results:', resultsArray);
@@ -155,23 +154,6 @@ const SearchPage = () => {
     };
 
 
-    // const handleViewDetails = async (result) => {
-    //     try {
-    //         if (!result.fileName) {
-    //             console.error('File name is undefined in result:', result);
-    //             throw new Error('File name is undefined');
-    //         }
-
-    //         // Construct the URL to the local file
-    //         const fileUrl = `${apiUrl}/download/${result.fileName}`;
-
-    //         // Open the file in a new tab/window
-    //         window.open(fileUrl, '_blank');
-    //     } catch (error) {
-    //         console.error('Error opening file:', error);
-    //         toast.error('Failed to open file');
-    //     }
-    // };
 
     const handleViewDetails = (result) => {
 

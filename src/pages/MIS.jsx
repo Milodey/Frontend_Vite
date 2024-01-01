@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import { apiUrl } from '../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios'; // Import Axios
+
 
 const MIS = () => {
     const [pdfFiles, setPdfFiles] = useState([]);
@@ -25,12 +27,11 @@ const MIS = () => {
                     return;
                 }
 
-                const response = await fetch(`${apiUrl}/list`, {
-                    method: 'GET',
+                const response = await axios.get(`${apiUrl}/list`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
-                    credentials: 'include', // Include credentials (cookies) in the request
+                    withCredentials: true, // Send cookies along with the request
                 });
 
                 handleResponse(response);
@@ -47,8 +48,8 @@ const MIS = () => {
         };
 
         const handleResponse = async (response) => {
-            if (response.ok) {
-                const files = await response.json();
+            if (response.status === 200) {
+                const files = response.data;
                 console.log('PDF Files:', files); // Log the files to check
 
                 // Update the state only if files are available

@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import adhar from '/img/aadhaar-1.svg';
 import { apiUrl } from '../api/api';
+import axios from 'axios'; // Import Axios
+
 
 const Register = () => {
     const navigate = useNavigate();
@@ -45,21 +47,17 @@ const Register = () => {
 
 
         try {
-            const response = await fetch(`${apiUrl}/register`, {
-                method: 'POST',
-                mode: 'no-cors',
+            const response = await axios.post(`${apiUrl}/register`, form, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include',
-                body: JSON.stringify(form),
+                withCredentials: true,
             });
-
 
             console.log('Server Response:', response);
 
-            if (response.ok) {
-                const data = await response.json();
+            if (response.status === 200) {
+                const data = response.data;
                 localStorage.setItem('authenticated', true);
 
                 // Show success popup
@@ -79,7 +77,7 @@ const Register = () => {
                 }, 3000);
             } else {
                 // Handle other non-OK responses (e.g., 400 Bad Request)
-                const errorData = await response.json(); // Assuming your server sends error details in the response body
+                const errorData = response.data; // Assuming your server sends error details in the response body
                 console.error('Registration failed. Server returned:', response.status, response.statusText, errorData);
 
                 // Handle registration error, e.g., show an error message to the user

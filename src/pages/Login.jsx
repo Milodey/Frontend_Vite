@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import adhar from '/img/aadhaar-1.svg';
 import { apiUrl } from '../api/api';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios'; // Import Axios
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
@@ -27,18 +29,18 @@ const Login = () => {
 
 
     try {
-      const response = await fetch(`${apiUrl}/login`, {
-        method: 'POST',
-        mode: 'no-cors',
+      const response = await axios.post(`${apiUrl}/login`, {
+        email,
+        password,
+      }, {
         headers: {
           'Content-Type': 'application/json',
-
-        }, credentials: 'include',
-        body: JSON.stringify({ email, password }),
+        },
+        withCredentials: true, // Send cookies along with the request
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         localStorage.setItem('authenticated', true);
         const { token } = data;
         localStorage.setItem('token', token);
@@ -49,7 +51,7 @@ const Login = () => {
 
         navigate('/dashboard');
       } else {
-        const errorMessage = await response.text();
+        const errorMessage = response.data.message || 'Login failed. Please try again.';
         toast.error(errorMessage, {
           position: 'top-center',
           autoClose: 3000,

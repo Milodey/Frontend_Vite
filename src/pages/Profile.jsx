@@ -7,6 +7,8 @@ import Navbar from '../components/Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { apiUrl } from '../api/api';
+import axios from 'axios'; // Import Axios
+
 
 const Profile = () => {
     const [userProfile, setUserProfile] = useState({
@@ -35,21 +37,18 @@ const Profile = () => {
         const userId = localStorage.getItem('userId');
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch(`${apiUrl}/user/${userId}`, {
-                    method: 'GET',
-                    mode: 'no-cors',
+                const response = await axios.get(`${apiUrl}/user/${userId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
-                    credentials: 'include',
+                    withCredentials: true,
                 });
 
-                if (response.ok) {
-                    const userData = await response.json();
+                if (response.status === 200) {
+                    const userData = response.data;
                     setUserProfile(userData);
                 } else if (response.status === 401) {
-                    // Unauthorized, handle as needed (e.g., redirect to login)
                     console.error('Unauthorized: Please log in.');
                 } else {
                     console.error('Failed to fetch user profile. Status:', response.status);
@@ -143,19 +142,16 @@ const Profile = () => {
             const token = localStorage.getItem('token');
             const userId = localStorage.getItem('userId');
 
-            const response = await fetch(`${apiUrl}/edit/${userId}`, {
-                method: 'PUT',
-                mode: 'no-cors',
+            const response = await axios.put(`${apiUrl}/edit/${userId}`, userProfile, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(userProfile),
-                credentials: 'include',
+                withCredentials: true,
             });
 
-            if (response.ok) {
-                const updatedUser = await response.json();
+            if (response.status === 200) {
+                const updatedUser = response.data;
                 setUserProfile(updatedUser);
                 toast.success('Profile updated successfully!');
             } else {

@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import adhar from '/img/aadhaar-1.svg';
+import axios from 'axios'; // Import Axios
 import { apiUrl } from '../api/api';
 
 const Register = () => {
@@ -25,11 +26,9 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { email, password } = form;
-        // Trim the email and password values
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
 
-        // Check if email or password is blank
         if (!trimmedEmail || !trimmedPassword) {
             toast.error('Email and password cannot be blank', {
                 position: 'top-center',
@@ -41,26 +40,20 @@ const Register = () => {
             return;
         }
 
-
         try {
-            const response = await fetch(`${apiUrl}/adminregister`, {
-                method: 'POST',
-                mode: 'no-cors',
+            const response = await axios.post(`${apiUrl}/adminregister`, form, {
+                withCredentials: true, // Send cookies along with the request
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include',
-                body: JSON.stringify(form),
             });
-
 
             console.log('Server Response:', response);
 
-            if (response.ok) {
-                const data = await response.json();
+            if (response.status === 200) {
+                const data = response.data;
                 localStorage.setItem('authenticated', true);
 
-                // Show success popup
                 toast.success('Registration successful!', {
                     position: 'top-center',
                     autoClose: 3000,
@@ -71,16 +64,12 @@ const Register = () => {
                     progress: undefined,
                 });
 
-                // Navigate to the login page after a delay
                 setTimeout(() => {
                     navigate('/login');
                 }, 3000);
             } else {
-                // Handle other non-OK responses (e.g., 400 Bad Request)
-                const errorData = await response.json(); // Assuming your server sends error details in the response body
-                console.error('Registration failed. Server returned:', response.status, response.statusText, errorData);
+                console.error('Registration failed. Server returned:', response.status, response.statusText);
 
-                // Handle registration error, e.g., show an error message to the user
                 console.error('Registration failed');
             }
         } catch (error) {
