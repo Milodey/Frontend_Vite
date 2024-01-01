@@ -24,10 +24,8 @@ const Navbar = () => {
 
 
     useEffect(() => {
-        // Fetch user information from the backend after login
         const fetchUserData = async () => {
             try {
-                // Ensure userId is defined before making the request
                 const userId = localStorage.getItem('userId');
                 if (!userId) {
                     console.error('UserId not available. Please log in.');
@@ -39,7 +37,7 @@ const Navbar = () => {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
-                    withCredentials: true, // Include credentials (cookies) in the request
+                    withCredentials: true,
                 });
 
                 if (response.status === 200) {
@@ -50,18 +48,16 @@ const Navbar = () => {
                     console.error('Failed to fetch user data:', response.status, response.statusText);
                 }
             } catch (error) {
-                console.error('Error fetching user data:', error);
+                console.error('Error fetching user data:', error.message || error);
             }
         };
 
-        fetchUserData(); // Fetch user data when the component mounts
+        fetchUserData();
 
-        // Update current time every minute
         const intervalId = setInterval(() => {
             setCurrentTime(new Date());
         }, 60000);
 
-        // Cleanup interval when the component unmounts
         return () => clearInterval(intervalId);
     }, []);
 

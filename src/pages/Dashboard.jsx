@@ -28,7 +28,7 @@ const Dashboard = () => {
                     console.error('Failed to fetch dashboard data:', response.status, response.statusText);
                 }
             } catch (error) {
-                console.error('Error fetching dashboard data:', error);
+                console.error('Error fetching dashboard data:', error.message || error);
             }
         };
 
