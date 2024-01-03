@@ -44,6 +44,7 @@ const Login = () => {
         localStorage.setItem('token', token);
         // You can also store other user-related information if needed
         localStorage.setItem('data.user', JSON.stringify(user));
+        localStorage.setItem('userId', user._id);
 
         navigate('/dashboard');
       } else {
