@@ -41,7 +41,7 @@ const Navbar = () => {
                 });
 
                 if (response.status === 200) {
-                    const userData = response.data;
+                    const userData = response.data.user;
                     setUserName(userData.name);
                     console.log(userData.name);
                 } else {
@@ -72,25 +72,12 @@ const Navbar = () => {
     };
 
     const handleLogout = async () => {
-        try {
-            const response = await axios.post(`${apiUrl}/logout`, null, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-
-            if (response.status === 200) {
-                console.log('Logout successful');
-            } else {
-                console.error('Logout failed:', response.status, response.statusText);
-            }
-        } catch (error) {
-            console.error('Error during logout:', error);
-        }
 
         // Clear authentication-related information in the frontend
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('designation');
+        localStorage.removeItem('authenticated');
 
         // Redirect to the login page
         navigate('/login');
