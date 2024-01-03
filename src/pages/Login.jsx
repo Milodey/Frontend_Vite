@@ -40,14 +40,10 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        const data = response.data;
-        localStorage.setItem('authenticated', true);
-        const { token } = data;
+        const { token, user } = response.data;;
         localStorage.setItem('token', token);
-        const userId = data.user._id;
-        localStorage.setItem('userId', userId);
-        const designation = data.user.designation;
-        localStorage.setItem('designation', designation);
+        // You can also store other user-related information if needed
+        localStorage.setItem('data.user', JSON.stringify(user));
 
         navigate('/dashboard');
       } else {
